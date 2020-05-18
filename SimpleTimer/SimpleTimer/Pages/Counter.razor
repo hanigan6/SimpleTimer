@@ -1,0 +1,51 @@
+﻿@using System.Timers;
+@page "/counter"
+
+<h1>Counter</h1>
+
+<p>Current count: @timer.Elapsed.TotalSeconds.ToString()</p>
+<p>Hey: @seconds</p>
+
+<button class="btn btn-primary" @onclick="@(async () => {Start();})">Start</button>
+<button class="btn btn-primary" @onclick="Stop">Stop buld</button>
+<button class="btn btn-primary" @onclick="UpdateSeconds">Stop buld</button>
+@this.(UpdateSeconds)
+
+@code {
+
+    private bool isStopped;
+    private string seconds;
+    private System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
+
+    private async void Start()
+    {
+        if (!timer.IsRunning)
+        {
+            timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+        }
+        while (timer.IsRunning)
+        {
+            await Task.Delay(1000);
+            StateHasChanged();
+        }
+    }
+    private void UpdateSeconds()
+    {
+        if (timer.IsRunning)
+        {
+            seconds = timer.Elapsed.ToString();
+            System.Threading.Thread.Sleep(1000);
+            this.StateHasChanged();
+        }
+
+        return;
+
+    }
+    private void Stop()
+    {
+        timer.Stop();
+        this.StateHasChanged();
+        return;
+    }
+}
